@@ -10,14 +10,17 @@ public class ReflectionAttack {
 
     public static void main(String[] args) throws Exception {
         MetricsRegistry singleton = MetricsRegistry.getInstance();
+        System.out.println("Singleton identity: " + System.identityHashCode(singleton));
 
         Constructor<MetricsRegistry> ctor = MetricsRegistry.class.getDeclaredConstructor();
         ctor.setAccessible(true);
 
-        MetricsRegistry evil = ctor.newInstance();
-
-        System.out.println("Singleton identity: " + System.identityHashCode(singleton));
-        System.out.println("Evil identity     : " + System.identityHashCode(evil));
-        System.out.println("Same object?      : " + (singleton == evil));
+        try {
+            MetricsRegistry evil = ctor.newInstance();
+            System.out.println("Evil identity     : " + System.identityHashCode(evil));
+            System.out.println("Same object?      : " + (singleton == evil));
+        } catch (Exception e) {
+            System.out.println("Reflection attack blocked: " + e.getCause());
+        }
     }
 }
