@@ -5,52 +5,21 @@ class Board {
     private Map<Integer, Integer> snakeMap;
     private Map<Integer, Integer> ladderMap;
 
-    public Board(int n) {
+    public Board(int n, DifficultyStrategy difficulty) {
         this.size = n * n;
         this.snakeMap = new HashMap<>();
         this.ladderMap = new HashMap<>();
-        generateSnakes(n);
-        generateLadders(n);
-    }
 
-    private Set<Integer> getOccupiedPositions() {
-        Set<Integer> occupied = new HashSet<>();
-        occupied.addAll(snakeMap.keySet());
-        occupied.addAll(snakeMap.values());
-        occupied.addAll(ladderMap.keySet());
-        occupied.addAll(ladderMap.values());
-        occupied.add(1);
-        occupied.add(size);
-        return occupied;
-    }
-
-    private void generateSnakes(int count) {
-        Random random = new Random();
-        int generated = 0;
-        while (generated < count) {
-            int head = random.nextInt(size - 2) + 2;
-            int tail = random.nextInt(head - 1) + 1;
-            Set<Integer> occupied = getOccupiedPositions();
-            if (!occupied.contains(head) && !occupied.contains(tail)) {
-                snakeMap.put(head, tail);
-                generated++;
-                System.out.println("Snake placed: " + head + " -> " + tail);
-            }
+        List<Snake> snakes = difficulty.generateSnakes(n, size);
+        for (Snake s : snakes) {
+            snakeMap.put(s.getHead(), s.getTail());
+            System.out.println("Snake placed: " + s.getHead() + " -> " + s.getTail());
         }
-    }
 
-    private void generateLadders(int count) {
-        Random random = new Random();
-        int generated = 0;
-        while (generated < count) {
-            int start = random.nextInt(size - 2) + 2;
-            int end = random.nextInt(size - start) + start + 1;
-            Set<Integer> occupied = getOccupiedPositions();
-            if (!occupied.contains(start) && !occupied.contains(end)) {
-                ladderMap.put(start, end);
-                generated++;
-                System.out.println("Ladder placed: " + start + " -> " + end);
-            }
+        List<Ladder> ladders = difficulty.generateLadders(n, size, snakes);
+        for (Ladder l : ladders) {
+            ladderMap.put(l.getStart(), l.getEnd());
+            System.out.println("Ladder placed: " + l.getStart() + " -> " + l.getEnd());
         }
     }
 

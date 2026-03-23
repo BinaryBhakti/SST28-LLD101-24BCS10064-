@@ -18,9 +18,19 @@ public class Main {
             players.add(new Player(name));
         }
 
-        System.out.println("\nCreating " + n + " x " + n + " board with " + n + " snakes and " + n + " ladders...\n");
+        System.out.print("Enter difficulty level (easy/hard): ");
+        String level = scanner.nextLine().trim().toLowerCase();
 
-        Board board = new Board(n);
+        DifficultyStrategy difficulty;
+        if (level.equals("hard")) {
+            difficulty = new HardDifficulty();
+        } else {
+            difficulty = new EasyDifficulty();
+        }
+
+        System.out.println("\nCreating " + n + " x " + n + " board (" + level + " mode) with " + n + " snakes and " + n + " ladders...\n");
+
+        Board board = new Board(n, difficulty);
         Dice dice = new Dice(6);
         Game game = new Game(board, dice, players);
         game.play();
