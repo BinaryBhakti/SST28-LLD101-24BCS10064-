@@ -1,0 +1,3 @@
+interface Refillable {
+    void refill();
+}
