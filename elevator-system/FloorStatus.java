@@ -1,0 +1,4 @@
+enum FloorStatus {
+    ACTIVE,
+    MAINTENANCE
+}
